@@ -7,6 +7,7 @@
 //
 
 #include "OptionScene.h"
+#include "MainScene.h"
 #include "SimpleAudioEngine.h"
 
 using namespace cocos2d;
@@ -14,10 +15,15 @@ using namespace CocosDenshion;
 
 CCScene* OptionScene::scene()
 {
-    CCScene *scene = CCScene::create();
-    OptionScene *layer = OptionScene::create();
-    
-    scene->addChild(layer);
+    static CCScene *scene = CCScene::create();
+    static OptionScene *layer = OptionScene::create();
+    static bool first = true;
+
+    if (first)
+    {
+        scene->addChild(layer);
+        first = !first;
+    }
     return scene;
 }
 
@@ -30,14 +36,5 @@ bool OptionScene::init()
 
 void OptionScene::menuCloseCallback(Ref* pSender)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-    MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
-    return;
-#endif
-
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+    CCDirector::sharedDirector()->replaceScene(MainScene::scene());
 }

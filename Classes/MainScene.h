@@ -10,13 +10,14 @@ public:
 
     static cocos2d::CCScene* scene();
     
-    void onClickPlay();
-    void onClickOption();
-    void onClickExit();
+    //void update(float dt);
     
-    void menuCloseCallback(cocos2d::Ref* pSender);
-
     CREATE_FUNC(MainScene);
+
+private:
+    void onClickPlay(Ref* pSender);
+    void onClickOptions(Ref* pSender);
+    void onClickExit(Ref* pSender);
 };
 
 #endif // __MAIN_SCENE_H__

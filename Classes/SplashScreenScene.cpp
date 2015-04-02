@@ -13,25 +13,25 @@
 using namespace cocos2d;
 using namespace CocosDenshion;
 
-CCScene* SplashScreenScene::scene(std::string file, float time)
+CCScene* SplashScreenScene::scene(std::string file, float time, func f)
 {
     CCScene *scene = CCScene::create();
-    SplashScreenScene *layer = SplashScreenScene::create(file, time);
-    
+    SplashScreenScene *layer = SplashScreenScene::create(file, time, f);
+
     scene->addChild(layer);
     return scene;
 }
 
 bool SplashScreenScene::init()
 {
-    if ( !CCLayer::init() )
+    if (!CCLayer::init())
     {
         return false;
     }
-    
+
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
     CCSprite* splashSprite = CCSprite::create(_file);
-    
+
     splashSprite->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
     this->addChild(splashSprite, -1);
     return true;
@@ -45,24 +45,18 @@ void SplashScreenScene::onEnter()
 
 void SplashScreenScene::finishSplash(float dt)
 {
-    CCDirector::sharedDirector()->replaceScene(MainScene::scene());
-}
-
-void SplashScreenScene::menuCloseCallback(Ref* pSender)
-{
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-    MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
-    return;
-#endif
-
-    Director::getInstance()->end();
+    if (_f == NULL)
+    {
+        Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
+        exit(0);
 #endif
+    }
+    CCDirector::sharedDirector()->replaceScene(_f());
 }
 
-SplashScreenScene*  SplashScreenScene::create(std::string file, float time)
+SplashScreenScene*  SplashScreenScene::create(std::string file, float time, func f)
 {
     SplashScreenScene*  ret = new SplashScreenScene;
 
@@ -70,6 +64,7 @@ SplashScreenScene*  SplashScreenScene::create(std::string file, float time)
     {
         ret->_file = file;
         ret->_time = time;
+        ret->_f = f;
     }
     if (ret && ret->init())
     {
@@ -78,3 +73,4 @@ SplashScreenScene*  SplashScreenScene::create(std::string file, float time)
     }
     return (NULL);
 }
+

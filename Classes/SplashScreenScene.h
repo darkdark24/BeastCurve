@@ -14,19 +14,21 @@
 class SplashScreenScene : public cocos2d::CCLayer
 {
 public:
+    typedef cocos2d::CCScene* (*func)();
+
     virtual bool init();
     
-    static cocos2d::CCScene* scene(std::string file, float time);
+    static cocos2d::CCScene* scene(std::string file, float time, func f);
     
     void onEnter();
     void finishSplash(float dt);
-    void menuCloseCallback(cocos2d::Ref* pSender);
 
 private:
     std::string _file;
     float       _time;
+    func        _f;
 
-    static SplashScreenScene*  create(std::string file, float time);
+    static SplashScreenScene*  create(std::string file, float time, func f);
    // CREATE_FUNC(SplashScreenScene);
 };
 

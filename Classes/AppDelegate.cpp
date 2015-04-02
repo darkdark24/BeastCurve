@@ -1,5 +1,9 @@
 #include "AppDelegate.h"
 #include "SplashScreenScene.h"
+#include "MainScene.h"
+
+// TODO: remove
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -47,7 +51,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = SplashScreenScene::scene("SplashScreen.jpg", 2.0);
+    //auto scene = SplashScreenScene::scene("SplashScreen.jpg", 2.0, &MainScene::scene);
+    auto scene = GameScene::scene();
 
     // run
     director->runWithScene(scene);

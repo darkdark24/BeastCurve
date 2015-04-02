@@ -33,6 +33,9 @@
     <ClCompile Include="..\Classes\SplashScreenScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -56,6 +59,9 @@
     <ClInclude Include="..\Classes\SplashScreenScene.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -67,6 +73,39 @@
       <Filter>resource</Filter>
     </Image>
     <Image Include="..\Resources\BeastCurve-icon.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\Play.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\Exit.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\ExitSelected.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\PlaySelected.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\SplashScreenExit.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\BackgroundGame.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\BackgroundMain.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\Option.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\OptionSelected.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\BackgroundOption.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\GameButton.jpg">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>
