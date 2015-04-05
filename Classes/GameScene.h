@@ -32,6 +32,7 @@ public:
     CREATE_FUNC(GameScene);
 
 private:
+    cocos2d::DrawNode* _drawer;
     bool _started;
     cocos2d::CCMenuItem* _leftButton;
     cocos2d::CCMenuItem* _rightButton;

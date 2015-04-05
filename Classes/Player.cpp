@@ -96,8 +96,6 @@ void Player::isMoving(bool isMoving)
 
 void Player::isDead(bool isDead)
 {
-    if (isDead)
-        CCLOG("DEAD");
     _isDead = isDead;
 }
 

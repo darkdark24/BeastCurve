@@ -58,7 +58,7 @@ void GameLogic::update(float dt)
         if (p->isDead() == false)
         {
             if (random(0, 70) == 0)
-                p->setTimeHole(random(20, 40) / 100.0);
+                p->setTimeHole(random(40, 70) / 100.0);
 
             MyPoint nextPos = p->getPos();
             if (p->getTimeHole() > 0)
@@ -81,13 +81,10 @@ void GameLogic::update(float dt)
 
             if (p->getTimeHole() <= 0)
             {
-                //CCLOG("TEST: %f %f", p->getPos().x / _gameSize.width * GridX, p->getPos().y / _gameSize.height * GridY);
                 int gridPos = (int)(p->getPos().x / _gameSize.width * GridX + (GridX * p->getPos().y / _gameSize.height * GridY));
-                //CCLOG("Pos: %d", gridPos);
 
                 if (_grid[gridPos] == true)
                 {
-                    CCLOG("CHECK %d", gridPos);
                     MyPoint pp;
 
                     pp.x = p->getPos().x + (cos(CC_DEGREES_TO_RADIANS(p->getDir()))) * p->getSize();
@@ -109,16 +106,6 @@ void GameLogic::update(float dt)
             }
         }
     }
-    /*for (auto t : _grid)
-    {
-        if (t.second)
-        {
-            CCLOG("%d %d", t.first % GridX, t.first / GridX);
-            DrawPrimitives::setDrawColor4B(50, 50, 50, 255);
-            //DrawPrimitives::drawSolidRect(Vec2((t.first % GridX) * GridX / _gameSize.width, (t.first / GridX) * GridY / _gameSize.height), Vec2();
-            DrawPrimitives::drawPoint(Vec2((t.first % GridX) * GridX / _gameSize.width, (t.first / GridX) * GridY / _gameSize.height));
-        }
-    }*/
 }
 
 std::deque<Player*> GameLogic::getPlayers()
@@ -134,6 +121,8 @@ bool GameLogic::hasGameEnd()
 void GameLogic::nextGame()
 {
     _nbPlayerAlive = _players.size();
+    _grid.clear();
+    _points.clear();
     for (auto p : _players)
     {
         MyPoint pos;
