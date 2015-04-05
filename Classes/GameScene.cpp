@@ -67,9 +67,6 @@ bool GameScene::init()
 
 void GameScene::update(float dt)
 {
-    time_t start, end;
-    time(&start);
-
     if (!_started)
         return;
 
@@ -85,34 +82,23 @@ void GameScene::update(float dt)
         _started = false;
         this->scheduleOnce(schedule_selector(GameScene::endGame), 3.0);
     }
-
-    time(&end);
-    double dif = difftime(end, start);
-    CCLOG("Update %.5lf seconds.", dif);
 }
 
 void GameScene::draw(Renderer *renderer, const kmMat4 &transform, uint32_t flags)
 {
-    time_t start, end;
-    time(&start);
-
     for (auto p : _gl->getPlayers())
     {
         //ccColor4F c(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
-        ccColor4F c(0.2, 0.2, 0.8, 1);
-        /*for (auto pos : p->getAllPos())
+        //ccColor4F c(0.2, 0.2, 0.8, 1);
+        DrawPrimitives::setDrawColor4B(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
+        for (auto pos : p->getAllPos())
         {
-            //_drawer->setDrawColor4B(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
             //_drawer->drawSolidCircle(ccp(pos.x, pos.y), pos.size, 1, 100, c);
-        }*/
-        _drawer->drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100, c);
-//        DrawPrimitives::setDrawColor4B(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
-//        DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100);
+            DrawPrimitives::drawSolidCircle(ccp(pos.x, pos.y), pos.size, 1, 100);
+        }
+        //_drawer->drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100, c);
+        DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100);
     }
-
-    time(&end);
-    double dif = difftime(end, start);
-    CCLOG("Draw %.5lf seconds.", dif);
 }
 
 void GameScene::startGame(float)
