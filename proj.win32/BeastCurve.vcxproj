@@ -155,6 +155,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\OptionScene.h" />
     <ClInclude Include="..\Classes\Player.h" />
+    <ClInclude Include="..\Classes\MyPoint.hpp" />
     <ClInclude Include="..\Classes\SplashScreenScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

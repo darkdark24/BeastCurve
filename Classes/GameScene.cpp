@@ -31,16 +31,18 @@ bool GameScene::init()
     if (!CCLayer::init())
         return false;
 
-    _gl = new GameLogic(CCDirector::sharedDirector()->getWinSize());
-    _gl->addPlayer();
-    _gl->addPlayer();
-    _gl->addPlayer();
-    for (auto p : _gl->getPlayers())
-    {
-        p->isMoving(true);
-    }
-
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+
+    _started = false;
+
+    _gl = new GameLogic(CCSize(screenSize.width, screenSize.height));
+    _gl->addPlayer();
+
+    /*CCSprite* background = CCSprite::create("BackgroundGame.jpg");
+
+    background->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+    this->addChild(background, -1);*/
+
     _leftButton = MenuItemImage::create("GameButton.jpg", "GameButtonPressed.jpg");
     _rightButton = MenuItemImage::create("GameButton.jpg", "GameButtonPressed.jpg");
 
@@ -54,16 +56,26 @@ bool GameScene::init()
     this->setTouchEnabled(true);
     this->schedule(schedule_selector(GameScene::update));
 
+    this->scheduleOnce(schedule_selector(GameScene::startGame), 3.0);
+
     return true;
 }
 
 void GameScene::update(float dt)
 {
+    if (!_started)
+        return;
+
     if (_leftButton->isSelected())
         onClickLeftButton(dt);
     if (_rightButton->isSelected())
         onClickRightButton(dt);
     _gl->update(dt);
+    if (_gl->hasGameEnd())
+    {
+        _started = false;
+        this->scheduleOnce(schedule_selector(GameScene::endGame), 3.0);
+    }
 }
 
 void GameScene::draw(Renderer *renderer, const kmMat4 &transform, uint32_t flags)
@@ -73,11 +85,24 @@ void GameScene::draw(Renderer *renderer, const kmMat4 &transform, uint32_t flags
         for (auto pos : p->getAllPos())
         {
             DrawPrimitives::setDrawColor4B(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
-            DrawPrimitives::drawSolidCircle(pos, 4, 1, 100);
+            DrawPrimitives::drawSolidCircle(ccp(pos.x, pos.y), pos.size, 1, 100);
         }
         DrawPrimitives::setDrawColor4B(p->getColor().r, p->getColor().g, p->getColor().b, p->getColor().a);
-        DrawPrimitives::drawSolidCircle(p->getPos(), 4, 1, 100);
+        DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100);
     }
+}
+
+void GameScene::startGame(float)
+{
+    for (auto p : _gl->getPlayers())
+        p->isMoving(true);
+    _started = true;
+}
+
+void GameScene::endGame(float)
+{
+    _gl->nextGame();
+    this->scheduleOnce(schedule_selector(GameScene::startGame), 3.0);
 }
 
 void GameScene::onClickLeftButton(float dt)

@@ -48,7 +48,6 @@ void SplashScreenScene::finishSplash(float dt)
     if (_f == NULL)
     {
         Director::getInstance()->end();
-
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         exit(0);
 #endif

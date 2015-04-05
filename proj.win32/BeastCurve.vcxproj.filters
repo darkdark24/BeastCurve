@@ -62,6 +62,9 @@
     <ClInclude Include="..\Classes\GameLogic.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\MyPoint.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

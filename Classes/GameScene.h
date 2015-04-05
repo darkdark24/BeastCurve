@@ -22,6 +22,9 @@ public:
     void update(float dt);
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::kmMat4 &transform, uint32_t flags);
 
+    void startGame(float dt);
+    void endGame(float dt);
+
     void onClickLeftButton(float dt);
     void onClickRightButton(float dt);
     void menuCloseCallback(cocos2d::Ref* pSender);
@@ -29,6 +32,7 @@ public:
     CREATE_FUNC(GameScene);
 
 private:
+    bool _started;
     cocos2d::CCMenuItem* _leftButton;
     cocos2d::CCMenuItem* _rightButton;
     GameLogic *_gl;

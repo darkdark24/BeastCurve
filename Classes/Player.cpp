@@ -7,10 +7,11 @@
 //
 
 #include "Player.h"
+#include "GameLogic.h"
 
 using namespace cocos2d;
 
-Player::Player(int id, CCPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir), _speed(100), _color(color), _isMoving(false), _isDead(false), _score(0), _timeHole(0)
+Player::Player(int id, MyPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir), _speed(GameLogic::Speed), _size(GameLogic::SizePoint), _color(color), _isMoving(false), _isDead(false), _score(0), _timeHole(0)
 {
 }
 
@@ -23,7 +24,7 @@ int Player::getId()
     return (_id);
 }
 
-CCPoint Player::getPos()
+MyPoint Player::getPos()
 {
     return (_pos);
 }
@@ -36,6 +37,11 @@ float Player::getDir()
 int Player::getSpeed()
 {
     return (_speed);
+}
+
+int Player::getSize()
+{
+    return (_size);
 }
 
 ccColor4B Player::getColor()
@@ -58,7 +64,7 @@ int Player::getScore()
     return (_score);
 }
 
-void Player::setPos(CCPoint pos)
+void Player::setPos(MyPoint pos)
 {
     _pos = pos;
 }
@@ -73,6 +79,11 @@ void Player::setSpeed(int speed)
     _speed = speed;
 }
 
+void Player::setSize(int size)
+{
+    _size = size;
+}
+
 void Player::setColor(ccColor4B color)
 {
     _color = color;
@@ -85,6 +96,8 @@ void Player::isMoving(bool isMoving)
 
 void Player::isDead(bool isDead)
 {
+    if (isDead)
+        CCLOG("DEAD");
     _isDead = isDead;
 }
 
@@ -93,12 +106,12 @@ void Player::increaseScore()
     ++_score;
 }
 
-void Player::addPos(CCPoint pos)
+void Player::addPos(MyPoint pos)
 {
     _oldPos.push_back(pos);
 }
 
-std::deque<CCPoint> Player::getAllPos()
+std::deque<MyPoint> Player::getAllPos()
 {
     return (_oldPos);
 }
@@ -111,4 +124,16 @@ float Player::getTimeHole()
 void Player::setTimeHole(float t)
 {
     _timeHole = t;
+}
+
+void Player::reset(MyPoint pos, float dir)
+{
+    _pos = pos;
+    _dir = dir;
+    _speed = GameLogic::Speed;
+    _size = GameLogic::SizePoint;
+    _isMoving = false;
+    _isDead = false;
+    _timeHole = 0;
+    _oldPos.clear();
 }

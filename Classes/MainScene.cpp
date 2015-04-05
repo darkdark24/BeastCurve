@@ -27,6 +27,12 @@ bool MainScene::init()
         return false;
 
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+
+    CCSprite* background = CCSprite::create("BackgroundMain.jpg");
+
+    background->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+    this->addChild(background, -1);
+
     CCMenuItem* playItem = MenuItemImage::create("Play.png", "PlaySelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
     CCMenuItem* optionsItem = MenuItemImage::create("Options.png", "OptionsSelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
     CCMenuItem* exitItem = MenuItemImage::create("Exit.png", "ExitSelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
