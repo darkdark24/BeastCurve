@@ -51,8 +51,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    //auto scene = SplashScreenScene::scene("SplashScreen.jpg", 2.0, &MainScene::scene);
-    auto scene = GameScene::scene();
+    auto scene = SplashScreenScene::scene("SplashScreen.jpg", 5.0, &MainScene::scene);
+    //auto scene = GameScene::scene();
 
     // run
     director->runWithScene(scene);
