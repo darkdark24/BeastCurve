@@ -30,9 +30,10 @@ bool SplashScreenScene::init()
     }
 
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-    CCSprite* splashSprite = CCSprite::create(_file);
+    CCSprite* splashSprite = CCSprite::create(_file.c_str());
 
     splashSprite->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+    splashSprite->setScale(screenSize.width / splashSprite->getContentSize().width, screenSize.height / splashSprite->getContentSize().height);
     this->addChild(splashSprite, -1);
     return true;
 }
@@ -47,9 +48,10 @@ void SplashScreenScene::finishSplash(float dt)
 {
     if (_f == NULL)
     {
-        Director::getInstance()->end();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         exit(0);
+#else
+        CCDirector::getInstance()->end();
 #endif
     }
     CCDirector::sharedDirector()->replaceScene(_f());

@@ -7,6 +7,7 @@
 //
 
 #include "GameScene.h"
+#include "MainScene.h"
 #include "SimpleAudioEngine.h"
 
 using namespace cocos2d;
@@ -14,15 +15,10 @@ using namespace CocosDenshion;
 
 CCScene* GameScene::scene()
 {
-    static CCScene *scene = CCScene::create();
-    static GameScene *layer = GameScene::create();
-    static bool first = true;
+    CCScene *scene = CCScene::create();
+    GameScene *layer = GameScene::create();
+    scene->addChild(layer);
 
-    if (first)
-    {
-        scene->addChild(layer);
-        first = !first;
-    }
     return scene;
 }
 
@@ -33,28 +29,82 @@ bool GameScene::init()
 
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
+    _gl = new GameLogic(CCSize(screenSize.width, screenSize.height - HeightHUD));
+    _gl->setOnDeadCallback(this);
+    _gl->addPlayer();
+    _gl->addPlayer();
+
     _drawer = DrawNode::create();
+    _drawer->drawRect(ccp(1, HeightHUD), ccp(screenSize.width - 1, screenSize.height - 1), Color4F::GRAY);
     this->addChild(_drawer, 1);
 
-    _started = false;
+    for (auto p : _gl->getPlayers())
+    {
+        std::string s("Player");
+        s += std::to_string(p->getId());
+        _playerLabel.push_back(CCLabelTTF::create(s, "Arial", 18));
+        _playerLabel.back()->setPosition(ccp(p->getPos().x, p->getPos().y + 180));
+        this->addChild(_playerLabel.back());
+    }
 
-    _gl = new GameLogic(CCSize(screenSize.width, screenSize.height));
-    _gl->addPlayer();
-    _gl->addPlayer();
+    std::string s("Scores | First to ");
+    s += std::to_string(ScoreMax);
+    CCLabelTTF* _labelScore = CCLabelTTF::create(s, "Arial", 32);
+    _labelScore->setPosition(ccp(screenSize.width / 2, HeightHUD / 4 * 3));
+    this->addChild(_labelScore);
+    
+    _scores.push_back(CCLabelTTF::create("Player 1: 0", "Arial", 24));
+    _scores.back()->setPosition(ccp(screenSize.width / 10 * 4, HeightHUD / 4 * 2));
+    if (_gl->getPlayers().size() < 1)
+        _scores.back()->setVisible(false);
+    this->addChild(_scores.back(), 1);
+    
+    _scores.push_back(CCLabelTTF::create("Player 2: 0", "Arial", 24));
+    _scores.back()->setPosition(ccp(screenSize.width / 10 * 6, HeightHUD / 4 * 2));
+    if (_gl->getPlayers().size() < 2)
+        _scores.back()->setVisible(false);
+    this->addChild(_scores.back(), 1);
+    
+    _scores.push_back(CCLabelTTF::create("Player 3: 0", "Arial", 24));
+    _scores.back()->setPosition(ccp(screenSize.width / 10 * 4, HeightHUD / 4));
+    if (_gl->getPlayers().size() < 3)
+        _scores.back()->setVisible(false);
+    this->addChild(_scores.back(), 1);
+
+    _scores.push_back(CCLabelTTF::create("Player 4: 0", "Arial", 24));
+    _scores.back()->setPosition(ccp(screenSize.width / 10 * 6, HeightHUD / 4));
+    if (_gl->getPlayers().size() < 4)
+        _scores.back()->setVisible(false);
+    this->addChild(_scores.back(), 1);
+
+    _winnerLabel = CCLabelTTF::create("", "Arial", 48);
+    _winnerLabel->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+    _winnerLabel->setVisible(true);
+    this->addChild(_winnerLabel, 1);
+
+    _started = false;
 
     /*CCSprite* background = CCSprite::create("BackgroundGame.jpg");
 
     background->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
     this->addChild(background, -1);*/
 
-    _leftButton = MenuItemImage::create("GameButton.jpg", "GameButtonPressed.jpg");
-    _rightButton = MenuItemImage::create("GameButton.jpg", "GameButtonPressed.jpg");
+    _leftButton = CCMenuItemImage::create("GameButtonLeft.png", "GameButtonLeftPressed.png");
+    _rightButton = CCMenuItemImage::create("GameButtonRight.png", "GameButtonRightPressed.png");
+    _replay = CCMenuItemImage::create("GameButtonLeft.png", "GameButtonLeftPressed.png", CC_CALLBACK_0(GameScene::onClickReplayButton, this));
+    _quit = CCMenuItemImage::create("GameButtonRight.png", "GameButtonRightPressed.png", CC_CALLBACK_0(GameScene::onClickQuitButton, this));
 
-    _leftButton->setPosition(ccp(_leftButton->getContentSize().width / 2, _leftButton->getContentSize().height / 2));
-    _rightButton->setPosition(ccp(screenSize.width - _rightButton->getContentSize().width / 2, _rightButton->getContentSize().height / 2));
+    _leftButton->setScale(HeightHUD / _leftButton->getContentSize().width, HeightHUD / _leftButton->getContentSize().height);
+    _leftButton->setPosition(ccp(HeightHUD / 2, HeightHUD / 2));
+    _rightButton->setScale(HeightHUD / _rightButton->getContentSize().width, HeightHUD / _rightButton->getContentSize().height);
+    _rightButton->setPosition(ccp(screenSize.width - HeightHUD / 2, HeightHUD / 2));
+    _replay->setScale(HeightHUD / 2 / _rightButton->getContentSize().width, HeightHUD / 2 / _rightButton->getContentSize().height);
+    _replay->setPosition(ccp(HeightHUD + HeightHUD / 2, HeightHUD / 2));
+    _quit->setScale(HeightHUD / 2 / _rightButton->getContentSize().width, HeightHUD / 2 / _rightButton->getContentSize().height);
+    _quit->setPosition(ccp(screenSize.width - HeightHUD - HeightHUD / 2, HeightHUD / 2));
 
-    CCMenu* gameButtons = CCMenu::create(_leftButton, _rightButton, NULL);
-    gameButtons->setPosition(Vec2::ZERO);
+    CCMenu* gameButtons = CCMenu::create(_leftButton, _rightButton, _replay, _quit, nullptr);
+    gameButtons->setPosition(ccp(0, 0));
     this->addChild(gameButtons, 1);
 
     this->setTouchEnabled(true);
@@ -75,12 +125,22 @@ void GameScene::update(float dt)
     if (_rightButton->isSelected())
         onClickRightButton(dt);
 
+    /*if (_replay->isSelected())
+        onClickReplayButton(dt);
+    if (_quit->isSelected())
+        onClickQuitButton(dt);*/
+
     _gl->update(dt);
 
     if (_gl->hasGameEnd())
     {
         _started = false;
-        this->scheduleOnce(schedule_selector(GameScene::endGame), 3.0);
+        std::string s("Player ");
+        s += std::to_string(_gl->getWinner()->getId());
+        s += " won";
+        _winnerLabel->setString(s);
+        _winnerLabel->setVisible(true);
+        this->scheduleOnce(schedule_selector(GameScene::endGame), 5.0);
     }
 }
 
@@ -94,15 +154,17 @@ void GameScene::draw(Renderer *renderer, const kmMat4 &transform, uint32_t flags
         for (auto pos : p->getAllPos())
         {
             //_drawer->drawSolidCircle(ccp(pos.x, pos.y), pos.size, 1, 100, c);
-            DrawPrimitives::drawSolidCircle(ccp(pos.x, pos.y), pos.size, 1, 100);
+            DrawPrimitives::drawSolidCircle(ccp(pos.x, pos.y + HeightHUD), pos.size, 1, 100);
         }
         //_drawer->drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100, c);
-        DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100);
+        DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y + HeightHUD), p->getPos().size, 1, 100);
     }
 }
 
 void GameScene::startGame(float)
 {
+    for (auto lbl : _playerLabel)
+        lbl->setVisible(false);
     for (auto p : _gl->getPlayers())
         p->isMoving(true);
     _started = true;
@@ -110,8 +172,38 @@ void GameScene::startGame(float)
 
 void GameScene::endGame(float)
 {
+    _started = false;
     _gl->nextGame();
-    this->scheduleOnce(schedule_selector(GameScene::startGame), 3.0);
+    _winnerLabel->setVisible(false);
+    for (auto p : _gl->getPlayers())
+    {
+        _playerLabel[p->getId() - 1]->setPosition(ccp(p->getPos().x, p->getPos().y + 180));
+        _playerLabel[p->getId() - 1]->setVisible(true);
+    }
+    if (_gl->finalWinner())
+    {
+        std::string s("Player ");
+        s += std::to_string(_gl->finalWinner()->getId());
+        s += " has won !";
+        _winnerLabel->setScale(1.5, 1.5);
+        _winnerLabel->setString(s);
+        _winnerLabel->setVisible(true);
+
+    }
+    else
+        this->scheduleOnce(schedule_selector(GameScene::startGame), 3.0);
+}
+
+void GameScene::onDead()
+{
+    for (auto p : _gl->getPlayers())
+    {
+        std::string s("Player ");
+        s += std::to_string(p->getId());
+        s += ": ";
+        s += std::to_string(p->getScore());
+        _scores[p->getId() - 1]->setString(s);
+    }
 }
 
 void GameScene::onClickLeftButton(float dt)
@@ -122,6 +214,17 @@ void GameScene::onClickLeftButton(float dt)
 void GameScene::onClickRightButton(float dt)
 {
     _gl->movePlayerRight(dt);
+}
+
+void GameScene::onClickReplayButton()
+{
+    _gl->reset();
+    endGame(0);
+}
+
+void GameScene::onClickQuitButton()
+{
+    CCDirector::sharedDirector()->replaceScene(MainScene::scene());
 }
 
 void GameScene::menuCloseCallback(Ref* pSender)

@@ -3,6 +3,10 @@
 
 #include "cocos2d.h"
 
+//#ifdef __APPLE__
+//# define Ref cocos@d::CCObject
+//#endif
+
 class MainScene : public cocos2d::CCLayer
 {
 public:
@@ -15,9 +19,9 @@ public:
     CREATE_FUNC(MainScene);
 
 private:
-    void onClickPlay(Ref* pSender);
-    void onClickOptions(Ref* pSender);
-    void onClickExit(Ref* pSender);
+    void onClickPlay(cocos2d::Ref* pSender);
+    void onClickOptions(cocos2d::Ref* pSender);
+    void onClickExit(cocos2d::Ref* pSender);
 };
 
 #endif // __MAIN_SCENE_H__

@@ -11,6 +11,10 @@
 
 #include "cocos2d.h"
 
+#ifdef __APPLE__
+# define Ref CCObject
+#endif
+
 class OptionScene : public cocos2d::CCLayer
 {
 public:

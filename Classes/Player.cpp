@@ -11,7 +11,7 @@
 
 using namespace cocos2d;
 
-Player::Player(int id, MyPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir), _speed(GameLogic::Speed), _size(GameLogic::SizePoint), _color(color), _isMoving(false), _isDead(false), _score(0), _timeHole(0)
+Player::Player(int id, MyPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir), _speed(GameLogic::Speed), _size(GameLogic::SizePoint), _color(color), _isMoving(false), _isDead(false), _score(0), _timeHole(3)
 {
 }
 
@@ -99,6 +99,11 @@ void Player::isDead(bool isDead)
     _isDead = isDead;
 }
 
+void Player::setScore(int score)
+{
+    _score = score;
+}
+
 void Player::increaseScore()
 {
     ++_score;
@@ -132,6 +137,6 @@ void Player::reset(MyPoint pos, float dir)
     _size = GameLogic::SizePoint;
     _isMoving = false;
     _isDead = false;
-    _timeHole = 0;
+    _timeHole = 3;
     _oldPos.clear();
 }

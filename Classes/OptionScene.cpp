@@ -15,15 +15,10 @@ using namespace CocosDenshion;
 
 CCScene* OptionScene::scene()
 {
-    static CCScene *scene = CCScene::create();
-    static OptionScene *layer = OptionScene::create();
-    static bool first = true;
+    CCScene *scene = CCScene::create();
+    OptionScene *layer = OptionScene::create();
+    scene->addChild(layer);
 
-    if (first)
-    {
-        scene->addChild(layer);
-        first = !first;
-    }
     return scene;
 }
 

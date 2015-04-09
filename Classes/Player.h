@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "MyPoint.hpp"
+#include <deque>
 
 class Player
 {
@@ -35,6 +36,7 @@ public:
     void setColor(cocos2d::ccColor4B color);
     void isMoving(bool isMoving);
     void isDead(bool isDead);
+    void setScore(int score);
 
     void increaseScore();
     void addPos(MyPoint pos);

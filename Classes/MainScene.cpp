@@ -9,15 +9,10 @@ using namespace CocosDenshion;
 
 CCScene* MainScene::scene()
 {
-    static CCScene *scene = CCScene::create();
-    static MainScene *layer = MainScene::create();
-    static bool first = true;
+    CCScene *scene = CCScene::create();
+    MainScene *layer = MainScene::create();
+    scene->addChild(layer);
 
-    if (first)
-    {
-        scene->addChild(layer);
-        first = !first;
-    }
     return scene;
 }
 
@@ -33,16 +28,16 @@ bool MainScene::init()
     background->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
     this->addChild(background, -1);
 
-    CCMenuItem* playItem = MenuItemImage::create("Play.png", "PlaySelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
-    CCMenuItem* optionsItem = MenuItemImage::create("Options.png", "OptionsSelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
-    CCMenuItem* exitItem = MenuItemImage::create("Exit.png", "ExitSelected.png", CC_CALLBACK_1(MainScene::onClickPlay, this));
+    CCMenuItem* playItem = CCMenuItemImage::create("Play.png", "PlaySelected.png", this, menu_selector(MainScene::onClickPlay));
+    CCMenuItem* optionsItem = CCMenuItemImage::create("Option.png", "OptionSelected.png", this, menu_selector(MainScene::onClickOptions));
+    CCMenuItem* exitItem = CCMenuItemImage::create("Exit.png", "ExitSelected.png", this, menu_selector(MainScene::onClickExit));
 
     playItem->setPosition(ccp(screenSize.width / 4, screenSize.height / 3));
     optionsItem->setPosition(ccp(screenSize.width / 4 * 2, screenSize.height / 3));
     exitItem->setPosition(ccp(screenSize.width / 4 * 3, screenSize.height / 3));
 
     CCMenu* menu = CCMenu::create(playItem, optionsItem, exitItem, NULL);
-    menu->setPosition(Vec2::ZERO);
+    menu->setPosition(ccp(0, 0));
     this->addChild(menu, 1);
 
     this->setTouchEnabled(true);

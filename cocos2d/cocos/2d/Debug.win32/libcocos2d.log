@@ -1,4 +1,4 @@
-﻿Build started 03/04/2015 01:16:40.
+﻿Build started 09/04/2015 23:17:28.
      1>Project "G:\BeastCurve\cocos2d\cocos\2d\libcocos2d.vcxproj" on node 2 (Build target(s)).
      1>PreLinkEvent:
          if not exist "G:\BeastCurve\proj.win32\Debug.win32\" mkdir "G:\BeastCurve\proj.win32\Debug.win32\"
@@ -628,4 +628,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:08:36.67
+Time Elapsed 00:08:25.29
