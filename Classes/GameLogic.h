@@ -16,7 +16,7 @@ public:
     
     void setOnDeadCallback(GameScene* gs);
     
-    int addPlayer();
+    Player* addPlayer();
     void movePlayerLeft(float dt, int id = -1);
     void movePlayerRight(float dt, int id = -1);
     void update(float dt);
@@ -31,6 +31,7 @@ public:
     static uint16_t AngleTurn;
     static uint16_t SizePoint;
     static uint16_t Speed;
+
 private:
     
     cocos2d::CCSize _gameSize;
@@ -57,7 +58,7 @@ private:
     std::map<int, bool> _grid;
     std::deque<MyPoint> _points;
 
-	static const uint16_t TimeBonus = 10;
+	static const uint16_t TimeBonus = 7;
 
 	double	_timeBonus;
 	typedef Bonus * (GameLogic::*ptr)();

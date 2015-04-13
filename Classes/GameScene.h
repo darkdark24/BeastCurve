@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "GameLogic.h"
+#include	"IA.h"
 #include <vector>
 
 /*#ifdef __APPLE__
@@ -54,6 +55,8 @@ private:
     std::vector<cocos2d::CCLabelTTF*> _scores;
     cocos2d::CCLabelTTF* _winnerLabel;
     GameLogic *_gl;
+
+	std::vector<IA*>	_listIA;
 };
 
 #endif
