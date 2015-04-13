@@ -179,6 +179,11 @@ void GameLogic::nextGame()
     _nbPlayerAlive = _players.size();
     _grid.clear();
     _points.clear();
+
+	for (std::list<Bonus *>::const_iterator it = _bonus.begin();
+		it != _bonus.end(); ++it)
+		delete(*it);
+	_bonus.clear();
     for (auto p : _players)
     {
         MyPoint pos;
