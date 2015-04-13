@@ -82,6 +82,7 @@ void Player::setSpeed(int speed)
 void Player::setSize(int size)
 {
     _size = size;
+	_pos.size = size;
 }
 
 void Player::setColor(ccColor4B color)

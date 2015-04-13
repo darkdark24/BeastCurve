@@ -1,5 +1,9 @@
 #include "GameLogic.h"
 #include "GameScene.h"
+#include "GoodSpeed.h"
+#include "GoodSize.h"
+#include "BadSpeed.h"
+#include "BadSize.h"
 
 using namespace cocos2d;
 
@@ -14,6 +18,11 @@ int random(int a, int b)
 
 GameLogic::GameLogic(CCSize const & gameSize) : _idPlayer(0), _gameSize(gameSize), _nbPlayerAlive(0)
 {
+	this->_randomBonus.push_back(&GameLogic::createBadSpeed);
+	this->_randomBonus.push_back(&GameLogic::createGoodSpeed);
+	this->_randomBonus.push_back(&GameLogic::createBadSize);
+	this->_randomBonus.push_back(&GameLogic::createGoodSize);
+	_timeBonus = 0;
 }
 
 GameLogic::~GameLogic()
@@ -122,11 +131,40 @@ void GameLogic::update(float dt)
                 else
                     _grid[gridPos] = true;
             }
+
+			for (Bonus * b : _bonus)
+			{
+				if (!b->isActive() && collision(b->getPosition(), p->getPos()))
+				{
+					b->selectTargetEffect(this->_players, p->getId());
+				}
+			}
         }
     }
+	
+	std::list<Bonus *>::const_iterator it = _bonus.begin();
+	while (it != _bonus.end())
+	{
+		(*it)->update(dt, _players);
+		if (!(*it)->isAlive())
+		{
+			delete (*it);
+			it = _bonus.erase(it);
+		}
+		else
+			++it;
+	}
+
+	if (_timeBonus >= TimeBonus)
+	{
+		this->createNewBonus();
+		_timeBonus = 0;
+	}
+	else
+		_timeBonus += dt;
 }
 
-std::deque<Player*> GameLogic::getPlayers()
+std::deque<Player*>& GameLogic::getPlayers()
 {
     return (_players);
 }
@@ -205,4 +243,43 @@ void GameLogic::incScore()
         }
     }
     _gs->onDead();
+}
+
+Bonus * GameLogic::createBadSpeed()
+{
+	return new BadSpeed();
+}
+
+Bonus * GameLogic::createGoodSpeed()
+{
+	return new GoodSpeed();
+}
+
+Bonus * GameLogic::createBadSize()
+{
+	return new BadSize();
+}
+
+Bonus * GameLogic::createGoodSize()
+{
+	return new GoodSize();
+}
+
+void GameLogic::createNewBonus()
+{
+	int r = random(0, _randomBonus.size());
+
+	Bonus * bonus = (this->*(_randomBonus[r]))();
+	bonus->setPosition(_gameSize.width, _gameSize.height);
+//	_gs->addChild(bonus->getSprite(), 1);
+	_bonus.push_back(bonus);
+}
+
+bool GameLogic::collision(const MyPoint & C1, const MyPoint & C2)
+{
+   int d2 = (C1.x-C2.x)*(C1.x-C2.x) + (C1.y-C2.y)*(C1.y-C2.y);
+   if (d2 > (C1.size + C2.size)*(C1.size + C2.size))
+      return false;
+   else
+      return true;
 }

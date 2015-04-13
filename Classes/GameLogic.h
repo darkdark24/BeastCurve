@@ -3,8 +3,8 @@
 #include <deque>
 #include <map>
 #include "Player.h"
-#include "MyPoint.hpp"
 #include "cocos2d.h"
+#include "Bonus.h"
 
 class GameScene;
 
@@ -20,7 +20,8 @@ public:
     void movePlayerLeft(float dt, int id = -1);
     void movePlayerRight(float dt, int id = -1);
     void update(float dt);
-    std::deque<Player*> getPlayers();
+    std::deque<Player*>& getPlayers();
+	inline std::list<Bonus*>& getBonus() { return _bonus; }
     bool hasGameEnd();
     void nextGame();
     void reset();
@@ -30,7 +31,6 @@ public:
     static uint16_t AngleTurn;
     static uint16_t SizePoint;
     static uint16_t Speed;
-
 private:
     
     cocos2d::CCSize _gameSize;
@@ -38,6 +38,14 @@ private:
     std::deque<Player*> _players;
     int _nbPlayerAlive;
     Player* _winner;
+
+	Bonus *	createGoodSpeed();
+	Bonus *	createBadSpeed();
+	Bonus * createGoodSize();
+	Bonus * createBadSize();
+	void	createNewBonus();
+
+	bool collision(const MyPoint &, const MyPoint &);
 
     GameScene* _gs;
     
@@ -48,4 +56,11 @@ private:
 
     std::map<int, bool> _grid;
     std::deque<MyPoint> _points;
+
+	static const uint16_t TimeBonus = 10;
+
+	double	_timeBonus;
+	typedef Bonus * (GameLogic::*ptr)();
+	std::vector<ptr> _randomBonus;
+	std::list<Bonus *> _bonus;
 };

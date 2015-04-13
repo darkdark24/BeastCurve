@@ -159,6 +159,15 @@ void GameScene::draw(Renderer *renderer, const kmMat4 &transform, uint32_t flags
         //_drawer->drawSolidCircle(ccp(p->getPos().x, p->getPos().y), p->getPos().size, 1, 100, c);
         DrawPrimitives::drawSolidCircle(ccp(p->getPos().x, p->getPos().y + HeightHUD), p->getPos().size, 1, 100);
     }
+
+	for (auto b : _gl->getBonus())
+	{
+		if (!b->isActive())
+		{
+			DrawPrimitives::setDrawColor4B(b->getColor().r, b->getColor().g, b->getColor().b, b->getColor().a);
+			DrawPrimitives::drawSolidCircle(ccp(b->getPosition().x, b->getPosition().y + HeightHUD), b->getPosition().size, 1, 100);	
+		}
+	}
 }
 
 void GameScene::startGame(float)
