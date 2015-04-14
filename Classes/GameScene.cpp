@@ -34,6 +34,9 @@ bool GameScene::init()
     _gl->addPlayer();
     _gl->addPlayer();
 
+	_listIA.push_back(new IA(_gl->addPlayer()));
+	_listIA.push_back(new IA(_gl->addPlayer()));
+
     _drawer = DrawNode::create();
     _drawer->drawRect(ccp(1, HeightHUD), ccp(screenSize.width - 1, screenSize.height - 1), Color4F::GRAY);
     this->addChild(_drawer, 1);
@@ -132,6 +135,14 @@ void GameScene::update(float dt)
 
     _gl->update(dt);
 
+	for (std::vector<IA*>::iterator it = _listIA.begin(); it != _listIA.end(); ++it) {
+		(*it)->update();
+		if ((*it)->_dir == Direction::LEFT)
+			_gl->movePlayerLeft(dt, (*it)->_player->getId());
+		else
+			_gl->movePlayerRight(dt, (*it)->_player->getId());
+	}
+
     if (_gl->hasGameEnd())
     {
         _started = false;
@@ -208,12 +219,12 @@ void GameScene::onDead()
 
 void GameScene::onClickLeftButton(float dt)
 {
-    _gl->movePlayerLeft(dt);
+    _gl->movePlayerLeft(dt, _gl->getPlayers().front()->getId());
 }
 
 void GameScene::onClickRightButton(float dt)
 {
-    _gl->movePlayerRight(dt);
+	_gl->movePlayerRight(dt, _gl->getPlayers().front()->getId());
 }
 
 void GameScene::onClickReplayButton()

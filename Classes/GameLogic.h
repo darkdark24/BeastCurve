@@ -16,7 +16,7 @@ public:
     
     void setOnDeadCallback(GameScene* gs);
     
-    int addPlayer();
+    Player* addPlayer();
     void movePlayerLeft(float dt, int id = -1);
     void movePlayerRight(float dt, int id = -1);
     void update(float dt);
@@ -30,6 +30,7 @@ public:
     static uint16_t AngleTurn;
     static uint16_t SizePoint;
     static uint16_t Speed;
+
 
 private:
     

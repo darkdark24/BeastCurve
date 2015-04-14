@@ -25,7 +25,7 @@ void GameLogic::setOnDeadCallback(GameScene* gs)
     _gs = gs;
 }
 
-int GameLogic::addPlayer()
+Player* GameLogic::addPlayer()
 {
     ++_nbPlayerAlive;
     ++_idPlayer;
@@ -45,8 +45,7 @@ int GameLogic::addPlayer()
     color.a = 255;
     
     _players.push_back(new Player(_idPlayer, pos, dir, color));
-    
-    return (_idPlayer);
+	return _players.back();
 }
 
 void GameLogic::movePlayerLeft(float dt, int id)

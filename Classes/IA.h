@@ -2,6 +2,7 @@
 #define	IA_H
 
 #include "MyPoint.hpp"
+#include	"Player.h"
 #include <deque>
 
 enum Direction
@@ -13,15 +14,16 @@ enum Direction
 class IA
 {
 public:
-	IA(int);
+	IA(Player*);
 	~IA();
 
 	void	update();
 	Direction	_dir;
-	int _id;
+
+	Player*	_player;
 private:
 	
-
+	int		_rand;
 	
 };
 
