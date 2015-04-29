@@ -11,7 +11,9 @@
 
 using namespace cocos2d;
 
-Player::Player(int id, MyPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir), _speed(GameLogic::Speed), _size(GameLogic::SizePoint), _color(color), _isMoving(false), _isDead(false), _score(0), _timeHole(3)
+Player::Player(int id, MyPoint pos, float dir, ccColor4B color) : _id(id), _pos(pos), _dir(dir),
+	_speed(GameLogic::Speed), _size(GameLogic::SizePoint), _color(color),
+	_isMoving(false), _isDead(false), _score(0), _timeHole(3), _reverse(false)
 {
 }
 
@@ -128,6 +130,16 @@ float Player::getTimeHole()
 void Player::setTimeHole(float t)
 {
     _timeHole = t;
+}
+
+bool Player::getReverse() const
+{
+	return _reverse;
+}
+
+void Player::setReverse(bool reverse)
+{
+	_reverse = reverse;
 }
 
 void Player::reset(MyPoint pos, float dir)

@@ -4,6 +4,10 @@
 #include "GoodSize.h"
 #include "BadSpeed.h"
 #include "BadSize.h"
+#include "GoodSlow.h"
+#include "BadSlow.h"
+#include "Reverse.h"
+#include "Invincibility.h"
 
 using namespace cocos2d;
 
@@ -22,6 +26,10 @@ GameLogic::GameLogic(CCSize const & gameSize) : _idPlayer(0), _gameSize(gameSize
 	this->_randomBonus.push_back(&GameLogic::createGoodSpeed);
 	this->_randomBonus.push_back(&GameLogic::createBadSize);
 	this->_randomBonus.push_back(&GameLogic::createGoodSize);
+	this->_randomBonus.push_back(&GameLogic::createGoodSlow);
+	this->_randomBonus.push_back(&GameLogic::createBadSlow);
+	this->_randomBonus.push_back(&GameLogic::createReverse);
+	this->_randomBonus.push_back(&GameLogic::createInvincibility);
 	_timeBonus = 0;
 }
 
@@ -62,7 +70,12 @@ void GameLogic::movePlayerLeft(float dt, int id)
     for (Player* p : _players)
     {
         if (p->isDead() == false && (p->getId() == id || id == -1))
-            p->setDir(p->getDir() + AngleTurn * dt);
+		{
+			if (p->getReverse())
+	            p->setDir(p->getDir() - AngleTurn * dt);
+			else
+		        p->setDir(p->getDir() + AngleTurn * dt);
+		}
     }
 }
 
@@ -71,7 +84,12 @@ void GameLogic::movePlayerRight(float dt, int id)
     for (Player* p : _players)
     {
         if (p->isDead() == false && (p->getId() == id || id == -1))
-            p->setDir(p->getDir() - AngleTurn * dt);
+		{
+			if (p->getReverse())
+	            p->setDir(p->getDir() + AngleTurn * dt);
+			else
+	            p->setDir(p->getDir() - AngleTurn * dt);
+		}
     }
 }
 
@@ -170,7 +188,7 @@ std::deque<Player*>& GameLogic::getPlayers()
 
 bool GameLogic::hasGameEnd()
 {
-    return (_nbPlayerAlive <= 1);
+    return (_nbPlayerAlive <= 0);
 }
 
 void GameLogic::nextGame()
@@ -267,6 +285,26 @@ Bonus * GameLogic::createBadSize()
 Bonus * GameLogic::createGoodSize()
 {
 	return new GoodSize();
+}
+
+Bonus * GameLogic::createGoodSlow()
+{
+	return new GoodSlow();
+}
+
+Bonus * GameLogic::createBadSlow()
+{
+	return new BadSlow();
+}
+
+Bonus * GameLogic::createReverse()
+{
+	return new Reverse();
+}
+
+Bonus * GameLogic::createInvincibility()
+{
+	return new Invincibility();
 }
 
 void GameLogic::createNewBonus()

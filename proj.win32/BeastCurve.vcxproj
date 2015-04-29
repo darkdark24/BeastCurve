@@ -153,17 +153,21 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\BadSize.h" />
+    <ClInclude Include="..\Classes\BadSlow.h" />
     <ClInclude Include="..\Classes\BadSpeed.h" />
     <ClInclude Include="..\Classes\Bonus.h" />
     <ClInclude Include="..\Classes\GameLogic.h" />
     <ClInclude Include="..\Classes\GameScene.h" />
     <ClInclude Include="..\Classes\GoodSize.h" />
+    <ClInclude Include="..\Classes\GoodSlow.h" />
     <ClInclude Include="..\Classes\GoodSpeed.h" />
     <ClInclude Include="..\Classes\IA.h" />
+    <ClInclude Include="..\Classes\Invincibility.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\OptionScene.h" />
     <ClInclude Include="..\Classes\Player.h" />
     <ClInclude Include="..\Classes\MyPoint.hpp" />
+    <ClInclude Include="..\Classes\Reverse.h" />
     <ClInclude Include="..\Classes\SplashScreenScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

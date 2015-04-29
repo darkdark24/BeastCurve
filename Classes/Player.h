@@ -46,7 +46,9 @@ public:
     void setTimeHole(float t);
 
     void reset(MyPoint pos, float dir);
-
+	
+	bool getReverse() const;
+	void setReverse(bool);
 private:
     int _id;
     MyPoint _pos;
@@ -58,6 +60,7 @@ private:
     bool _isDead;
     int _score;
     float _timeHole;
+	bool _reverse;
 
     std::deque<MyPoint> _oldPos;
 };

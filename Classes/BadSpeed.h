@@ -6,7 +6,7 @@
 class BadSpeed : public Bonus
 {
 public:
-	BadSpeed() { _good = false; _color = cocos2d::ccColor4B::RED; }
+	BadSpeed() { _good = false; _color = cocos2d::ccColor4B::RED; _sprite = cocos2d::CCSprite::create("speed_bad.png"); }
 	virtual ~BadSpeed() {}
 	virtual void doEffect(Player * player) { player->setSpeed(player->getSpeed() * 2); }
 	virtual void doReverseEffect(Player * player) { player->setSpeed(player->getSpeed() / 2); }

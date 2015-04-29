@@ -44,6 +44,10 @@ private:
 	Bonus *	createBadSpeed();
 	Bonus * createGoodSize();
 	Bonus * createBadSize();
+	Bonus * createGoodSlow();
+	Bonus * createBadSlow();
+	Bonus * createReverse();
+	Bonus * createInvincibility();
 	void	createNewBonus();
 
 	bool collision(const MyPoint &, const MyPoint &);
@@ -58,7 +62,7 @@ private:
     std::map<int, bool> _grid;
     std::deque<MyPoint> _points;
 
-	static const uint16_t TimeBonus = 7;
+	static const uint16_t TimeBonus = 3;
 
 	double	_timeBonus;
 	typedef Bonus * (GameLogic::*ptr)();
