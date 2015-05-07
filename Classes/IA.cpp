@@ -5,10 +5,12 @@
 
 #define PI 3.14159265
 
-IA::IA(Player* p)
+IA::IA(Player* p, int w, int h)
 	:_player(p),
 	_rand(0)
 {
+	width = w;
+	height = h;
 }
 
 IA::~IA()
@@ -19,32 +21,37 @@ bool	IA::checkWall()
 {
 	MyPoint pos = _player->getPos();
 
-	if (pos.x > 900 || pos.x < 50)
+	if (pos.x > (width - 50))
 	{
-		if (pos.x > 900 && (_player->getDir() >= 270 || _player->getDir() <= 90))
-		{
+		if (_player->getDir() >= 0)
+			_dir = Direction::LEFT;
+		else
 			_dir = Direction::RIGHT;
-			return true;
-		}
-		if (pos.x < 50 && (_player->getDir() <= 270 && _player->getDir() >= 90))
-		{ 
-			_dir = Direction::RIGHT;
-			return true;
-		}
-		
+		return true;
 	}
-	if (pos.y > 430 || pos.y < 50)
+	if (pos.x < 50)
 	{
-		if (pos.y > 430 && (_player->getDir() <= 180 && _player->getDir() >= 0))
-		{
+		if (_player->getDir() >= 180)
+			_dir = Direction::LEFT;
+		else
 			_dir = Direction::RIGHT;
-			return true;
-		}
-		if (pos.y < 50 && (_player->getDir() >= 180 && _player->getDir() <= 360))
-		{ 
+		return true;
+	}
+	if (pos.y > (height - 50))
+	{
+		if (_player->getDir() >= 90)
+			_dir = Direction::LEFT;
+		else
 			_dir = Direction::RIGHT;
-			return true;
-		}
+		return true;
+	}
+	if (pos.y < 50)
+	{
+		if (_player->getDir() >= 270)
+			_dir = Direction::LEFT;
+		else
+			_dir = Direction::RIGHT;
+		return true;
 	}
 	return false;
 }
@@ -60,50 +67,86 @@ int	IA::getAngle(MyPoint p)
 	return result;
 }
 
-MyPoint	IA::checkAround(std::deque<MyPoint> _points)
+
+bool	IA::checkAround2(std::deque<MyPoint> _points)
 {
 	MyPoint pos = _player->getPos();
-	MyPoint	nearPoint;
-	nearPoint.x = 0;
-	nearPoint.y = 0;
-	int distX = 900;
-	int distY = 450;
+	int param = 50;
+	int size = 10;
 
-	MyPoint	Distance;
-	Distance.x = -1000;
-	Distance.y = -1000;
-
-	for (int i = 0; i < _points.size(); i++)
-	{
-		double dir = _player->getDir();
-		if (dir > 180)
-			dir  = 360-dir;
-		double m = (dir * PI / 180.0);
-		double t = m;
-		getAngle(_points[i]);
-		if (((pos.x - 50) < _points[i].x) && ((pos.x + 50) > _points[i].x) && ((pos.y - 50) < _points[i].y) && ((pos.y + 50) > _points[i].y))
+	for (int i = 0; i < param; i++)
 		{
-			if (checkInFrontOf(_points[i]))
-			{
-				//_dir = Direction::NONE;
-				int tmpDistanceX = pos.x - _points[i].x;
-				int tmpDistanceY = pos.y - _points[i].y;
-
-				if (tmpDistanceX < 0)
-					tmpDistanceX *= -1;
-				if (tmpDistanceY < 0)
-					tmpDistanceY *= -1;
-				if ((tmpDistanceX < distX && tmpDistanceY < distY) && (tmpDistanceX > 5 && tmpDistanceY > 5))
+			for (int j=0; j< _points.size(); j++)
+			{			
+				if (_player->getDir() >= 0 && _player->getDir() <= 90)
 				{
-					distX = tmpDistanceX;
-					distY = tmpDistanceY;
-					Distance.x = pos.x - _points[i].x;
-					Distance.y = pos.y - _points[i].y;
+					MyPoint tmp = pos;
+					tmp.x += param;
+					tmp.y += param;
+					if ((((int)_points[j].x - size) < (int)(tmp.x-i) && ((int)_points[j].x + size) > (int)(tmp.x-i)) && (((int)_points[j].y - size) < (int)(tmp.y) && ((int)_points[j].y + size) > (int)(tmp.y)))
+					{
+						_dir = Direction::RIGHT;
+						return true;
+					}
+					if ((((int)_points[j].x - size) < (int)(tmp.x) && ((int)_points[j].x + size) > (int)(tmp.x)) && (((int)_points[j].y - size) < (int)(tmp.y-i) && ((int)_points[j].y + size) > (int)(tmp.y-i)))
+					{
+						_dir = Direction::LEFT;
+						return true;
+					}
 				}
-			}
+
+				if (_player->getDir() > 90 && _player->getDir() <= 180)
+				{
+					MyPoint tmp1 = pos;
+					tmp1.x -= param;
+					tmp1.y += param;
+					if ((((int)_points[j].x - size) < (int)(tmp1.x+i) && ((int)_points[j].x + size) > (int)(tmp1.x+i)) && (((int)_points[j].y - size) < (int)(tmp1.y) && ((int)_points[j].y + size) > (int)(tmp1.y)))
+					{
+						_dir = Direction::LEFT;
+						return true;
+					}
+					if ((((int)_points[j].x - size) < (int)(tmp1.x) && ((int)_points[j].x + size) > (int)(tmp1.x)) && (((int)_points[j].y - size) < (int)(tmp1.y-i) && ((int)_points[j].y + size) > (int)(tmp1.y-i)))
+					{
+						_dir = Direction::RIGHT;
+						return true;
+					}
+				}
+				if (_player->getDir() > 180 && _player->getDir() <= 270)
+				{
+					MyPoint tmp2 = pos;
+					tmp2.x -= param;
+					tmp2.y -= param;
+					if ((((int)_points[j].x - size) < (int)(tmp2.x+i) && ((int)_points[j].x + size) > (int)(tmp2.x+i)) && (((int)_points[j].y - size) < (int)(tmp2.y) && ((int)_points[j].y + size) > (int)(tmp2.y)))
+					{
+						_dir = Direction::RIGHT;
+						return true;
+					}
+					if ((((int)_points[j].x - size) < (int)(tmp2.x) && ((int)_points[j].x + size) > (int)(tmp2.x)) && (((int)_points[j].y - size) < (int)(tmp2.y+i) && ((int)_points[j].y + size) > (int)(tmp2.y+i)))
+					{
+						_dir = Direction::LEFT;
+						return true;
+					}
+				}
+				
+				if (_player->getDir() > 270 && _player->getDir() <= 360)
+				{
+					MyPoint tmp3 = pos;
+					tmp3.x += param;
+					tmp3.y -= param;
+					if ((((int)_points[j].x - size) < (int)(tmp3.x-i) && ((int)_points[j].x + size) > (int)(tmp3.x-i)) && (((int)_points[j].y - size) < (int)(tmp3.y) && ((int)_points[j].y + size) > (int)(tmp3.y)))
+					{
+						_dir = Direction::LEFT;
+						return true;
+					}
+					if ((((int)_points[j].x - size) < (int)(tmp3.x) && ((int)_points[j].x + size) > (int)(tmp3.x)) && (((int)_points[j].y - size) < (int)(tmp3.y+i) && ((int)_points[j].y + size) > (int)(tmp3.y+i)))
+					{
+						_dir = Direction::RIGHT;
+						return true;
+					}
+				}
 		}
 	}
-	return Distance;
+	return false;
 }
 
 void	IA::update(std::deque<MyPoint> _points)
@@ -111,18 +154,19 @@ void	IA::update(std::deque<MyPoint> _points)
 	_dir = Direction::NONE;
 	if (checkWall())
 		return;
-	MyPoint Distance = checkAround(_points);
-	if ((Distance.x == -1000 && Distance.y == -1000))
+	if (checkAround2(_points))
+		return;
+	int iSecret, iGuess;
+  /* initialize random seed: */
+  srand (time(NULL));
+
+  /* generate secret number between 1 and 10: */
+  iSecret = rand() % 6 + 1;
+  if (iSecret == 1)
+	  _dir = Direction::LEFT;
+   if (iSecret == 2)
+	   _dir = Direction::RIGHT;
+    if (iSecret >= 3)
 		_dir = Direction::NONE;
-	else
-	{
-		if ((Distance.x > 0 && Distance.y > 0) && (Distance.x < 50 && Distance.y < 50))
-			_dir = Direction::LEFT;
-		else if ((Distance.x > 0 && Distance.y < 0) && (Distance.x < 25 && Distance.y > -50))
-			_dir = Direction::RIGHT;
-		else if ((Distance.x < 0 && Distance.y < 0) && (Distance.x > -50 && Distance.y > -50))
-			_dir = Direction::RIGHT;
-		else if ((Distance.x < 0 && Distance.y > 0) && (Distance.x > -50 && Distance.y < 50))
-			_dir = Direction::RIGHT;
-	}
+	return;
 }

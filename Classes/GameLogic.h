@@ -32,6 +32,8 @@ public:
     static uint16_t SizePoint;
     static uint16_t Speed;
 
+	std::deque<MyPoint>	getPoints() { return _points;  }
+
 private:
     
     cocos2d::CCSize _gameSize;

@@ -15,15 +15,14 @@ enum Direction
 class IA
 {
 public:
-	IA(Player*);
+	IA(Player*, int, int);
 	~IA();
 
 	void	update(std::deque<MyPoint>);
 
 	bool	checkWall();
 	bool	checkInFrontOf(MyPoint);
-	MyPoint	checkAround(std::deque<MyPoint>);
-
+	bool  checkAround2(std::deque<MyPoint>);
 	Direction	_dir;
 
 	int		getAngle(MyPoint);
@@ -37,6 +36,9 @@ private:
 	int		_maxAngle;
 	double	_tan;
 	int		_angle;
+
+	int width;
+	int height;
 	
 };
 

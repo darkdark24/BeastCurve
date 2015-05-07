@@ -34,8 +34,8 @@ bool GameScene::init()
     _gl->addPlayer();
     _gl->addPlayer();
 
-	_listIA.push_back(new IA(_gl->addPlayer()));
-	_listIA.push_back(new IA(_gl->addPlayer()));
+	_listIA.push_back(new IA(_gl->addPlayer(),screenSize.width, screenSize.height - HeightHUD));
+	_listIA.push_back(new IA(_gl->addPlayer(),screenSize.width, screenSize.height - HeightHUD));
 
     _drawer = DrawNode::create();
     _drawer->drawRect(ccp(1, HeightHUD), ccp(screenSize.width - 1, screenSize.height - 1), Color4F::GRAY);
@@ -136,10 +136,10 @@ void GameScene::update(float dt)
     _gl->update(dt);
 
 	for (std::vector<IA*>::iterator it = _listIA.begin(); it != _listIA.end(); ++it) {
-		(*it)->update();
+		(*it)->update(_gl->getPoints());
 		if ((*it)->_dir == Direction::LEFT)
 			_gl->movePlayerLeft(dt, (*it)->_player->getId());
-		else
+		else if ((*it)->_dir == Direction::RIGHT)
 			_gl->movePlayerRight(dt, (*it)->_player->getId());
 	}
 
