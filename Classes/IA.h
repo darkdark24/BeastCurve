@@ -26,6 +26,8 @@ public:
 
 	Direction	_dir;
 
+	int		getAngle(MyPoint);
+
 	Player*	_player;
 private:
 	

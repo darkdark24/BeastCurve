@@ -54,6 +54,12 @@ bool	IA::checkInFrontOf(MyPoint	_p)
 	return true;
 }
 
+int	IA::getAngle(MyPoint p)
+{
+	int	result = 0;// = tan(p.y, p.x) * 180 / PI;
+	return result;
+}
+
 MyPoint	IA::checkAround(std::deque<MyPoint> _points)
 {
 	MyPoint pos = _player->getPos();
@@ -69,6 +75,12 @@ MyPoint	IA::checkAround(std::deque<MyPoint> _points)
 
 	for (int i = 0; i < _points.size(); i++)
 	{
+		double dir = _player->getDir();
+		if (dir > 180)
+			dir  = 360-dir;
+		double m = (dir * PI / 180.0);
+		double t = m;
+		getAngle(_points[i]);
 		if (((pos.x - 50) < _points[i].x) && ((pos.x + 50) > _points[i].x) && ((pos.y - 50) < _points[i].y) && ((pos.y + 50) > _points[i].y))
 		{
 			if (checkInFrontOf(_points[i]))
